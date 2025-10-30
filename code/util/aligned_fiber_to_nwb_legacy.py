@@ -955,7 +955,7 @@ def append_aligned_fiber_to_nwb(AnalDir, max_drop, nwb_file):
 
     dict_fip = deal_with_nans(dict_fip, check_both=True, max_drop=max_drop)
     nwbfile = add_fiber_data_to_nwb(nwb_file, dict_fip=dict_fip)
-    return nwbfile, drop_start, drop_end, kept_gaps
+    return nwbfile, drop_start, drop_end, kept_gaps, behavior_system
 
 
 def attach_dict_fip(AnalDir, folder_nwb, dict_fip):

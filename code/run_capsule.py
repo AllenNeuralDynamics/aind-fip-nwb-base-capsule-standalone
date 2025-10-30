@@ -103,7 +103,7 @@ if __name__ == "__main__":
         fiber_photometry_system, filenames = detect_fiber_photometry_system(fiber_fp)
         fip_duration = min([num_rows(f) for f in filenames])
         if fip_duration > settings.min_fip_duration:
-            nwbfile, drop_start, drop_end, kept_gaps = append_aligned_fiber_to_nwb(
+            nwbfile, drop_start, drop_end, kept_gaps, behavior_system = append_aligned_fiber_to_nwb(
                 fiber_fp, settings.max_drop, base_nwb_file
             )
             logging.info("Successfully appended the aligned fiber photometry data.")
@@ -123,6 +123,7 @@ if __name__ == "__main__":
         logging.info("Successfully wrote NWB file.")
     
     if "drop_start" in locals():
-        run_qc(drop_start, drop_end, kept_gaps)
+        if behavior_system != "pavlovian":
+            run_qc(drop_start, drop_end, kept_gaps)
     else: 
         logging.info("No legacy fiber data to qc")
