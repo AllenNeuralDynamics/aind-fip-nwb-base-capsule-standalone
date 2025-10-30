@@ -18,7 +18,7 @@ import pynwb
 from hdmf_zarr import NWBZarrIO
 from pynwb import NWBHDF5IO
 from scipy import interpolate
-
+from util.add_fiber_to_nwb import add_fiber_data_to_nwb
 
 def is_numeric(obj):
     """
@@ -855,7 +855,7 @@ def clean_timestamps(timestamps, pace=0.05, tolerance=0.2):
     return timestamps_final
 
 
-def append_aligned_fiber_to_nwb(AnalDir, max_drop):
+def append_aligned_fiber_to_nwb(AnalDir, max_drop, nwb_file):
     """Combine preprocessing steps and append to nwb"""
     drop_start, drop_end, kept_gaps = 0, 0, []
     # % Detect Fiber photometry and behavioral systems
@@ -953,7 +953,7 @@ def append_aligned_fiber_to_nwb(AnalDir, max_drop):
         )
 
     dict_fip = deal_with_nans(dict_fip, check_both=True, max_drop=max_drop)
-    nwbfile = attach_dict_fip(AnalDir, folder_nwb="/results/nwb/", dict_fip=dict_fip)
+    nwbfile = add_fiber_data_to_nwb(nwb_file, dict_fip=dict_fip)
     return nwbfile, drop_start, drop_end, kept_gaps
 
 

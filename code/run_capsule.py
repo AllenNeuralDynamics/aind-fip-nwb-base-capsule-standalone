@@ -27,6 +27,7 @@ from util.add_fiber_to_nwb import (
     add_fiber_data_to_nwb,
     deal_with_nans,
 )
+from util.qc import run_qc
 
 
 class FiberSettings(BaseSettings, cli_parse_args=True):
@@ -102,10 +103,14 @@ if __name__ == "__main__":
         fiber_photometry_system, filenames = detect_fiber_photometry_system(fiber_fp)
         fip_duration = min([num_rows(f) for f in filenames])
         if fip_duration > settings.min_fip_duration:
-            nwbfile = append_aligned_fiber_to_nwb(
+            nwbfile, drop_start, drop_end, kept_gaps = append_aligned_fiber_to_nwb(
                 fiber_fp, settings.max_drop, base_nwb_file
             )
             logging.info("Successfully appended the aligned fiber photometry data.")
+            if "drop_start" in locals():
+                run_qc(drop_start, drop_end, kept_gaps)
+            else: 
+                logging.info("No fiber data to qc")
         else:
             raise ValueError(
                 f"FIP data is present, but only {fip_duration / 20}s long. "
