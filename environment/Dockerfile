@@ -11,6 +11,9 @@ COPY git-askpass /
 RUN pip install -U --no-cache-dir \
     aind-data-access-api==1.2.2 \
     aind-data-schema==1.2.0 \
+    harp-python==0.4.1 \
+    matplotlib==3.9.4 \
+    numpy==2.0.2 \
     pandas==2.2.1 \
     pynwb \
     scipy \
