@@ -125,6 +125,15 @@ if __name__ == "__main__":
     if "drop_start" in locals():
         if behavior_system != "pavlovian":
             run_qc(drop_start, drop_end, kept_gaps)
+        elif:
+            logging.info("No legacy fiber data to qc")
+            os.mkdir(os.path.join("/results", "alignment-qc"))
+            qc_file_path = Path("/results") / "alignment-qc" / "no_fip_to_qc.txt"
+            # Create an empty file
+            with open(qc_file_path, "w") as file:
+                file.write(
+                    "This is a pavlovian session"
+                )
     else: 
         logging.info("No legacy fiber data to qc")
         os.mkdir(os.path.join("/results", "alignment-qc"))
@@ -132,5 +141,5 @@ if __name__ == "__main__":
         # Create an empty file
         with open(qc_file_path, "w") as file:
             file.write(
-                "FIP data files are missing. This may be a behavior only session"
+                "This is not a fiber legacy session"
             )
