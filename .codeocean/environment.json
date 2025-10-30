@@ -1,0 +1,78 @@
+{
+	"version": 1,
+	"base_image": "codeocean/mambaforge3:23.1.0-4-python3.10.12-ubuntu22.04",
+	"post_install": true,
+	"options": {
+		"registry_host_arg": true,
+		"git_ask_pass": true,
+		"mount_secrets": true
+	},
+	"installers": {
+		"pip": {
+			"packages": [
+				{
+					"name": "aind-data-access-api",
+					"version": "1.2.2"
+				},
+				{
+					"name": "aind-data-schema",
+					"version": "1.2.0"
+				},
+				{
+					"name": "aind-log-utils",
+					"version": "0.2.4"
+				},
+				{
+					"name": "aind-nwb-utils",
+					"version": "0.1.1"
+				},
+				{
+					"name": "aind-qcportal-schema",
+					"version": "0.4.0"
+				},
+				{
+					"name": "harp-python",
+					"version": "0.4.1"
+				},
+				{
+					"name": "hdmf-zarr",
+					"version": "0.11.1"
+				},
+				{
+					"name": "matplotlib",
+					"version": "3.9.4"
+				},
+				{
+					"name": "numpy",
+					"version": "2.0.2"
+				},
+				{
+					"name": "pandas",
+					"version": "2.3.1"
+				},
+				{
+					"name": "pynwb",
+					"version": "3.0.0"
+				},
+				{
+					"name": "python-dateutil",
+					"version": "2.9.0.post0"
+				},
+				{
+					"name": "regex",
+					"version": "2024.11.6"
+				},
+				{
+					"name": "scipy",
+					"version": "1.13.1"
+				},
+				{
+					"name": "uuid",
+					"version": "1.30"
+				}
+			],
+			"options": {},
+			"pre_install_options": {}
+		}
+	}
+}
