@@ -18,7 +18,7 @@ from aind_data_schema.core.quality_control import (
 )
 from aind_data_schema_models.modalities import Modality
 from aind_qcportal_schema.metric_value import DropdownMetric
-from util.aligned_fiber_to_nwb import num_rows, to_daytime
+from util.aligned_fiber_to_nwb_legacy import num_rows, to_daytime
 from harp import read
 from hdmf_zarr import NWBZarrIO
 from scipy.stats import ttest_1samp

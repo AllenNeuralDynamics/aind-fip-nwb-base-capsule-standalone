@@ -116,6 +116,7 @@ def detect_behavior_recording_system(AnalDir):
     """
     This function detects the behavior recording system
     """
+    AnalDir = AnalDir.as_posix()
     file_pavlovian = glob.glob(
         AnalDir + os.sep + "**" + os.sep + "TrialN_TrialType_ITI_*.csv", recursive=True
     )

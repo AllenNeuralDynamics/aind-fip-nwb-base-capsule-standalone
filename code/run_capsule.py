@@ -107,10 +107,6 @@ if __name__ == "__main__":
                 fiber_fp, settings.max_drop, base_nwb_file
             )
             logging.info("Successfully appended the aligned fiber photometry data.")
-            if "drop_start" in locals():
-                run_qc(drop_start, drop_end, kept_gaps)
-            else: 
-                logging.info("No fiber data to qc")
         else:
             raise ValueError(
                 f"FIP data is present, but only {fip_duration / 20}s long. "
@@ -125,3 +121,8 @@ if __name__ == "__main__":
         io.write(nwbfile)
 
         logging.info("Successfully wrote NWB file.")
+    
+    if "drop_start" in locals():
+        run_qc(drop_start, drop_end, kept_gaps)
+    else: 
+        logging.info("No legacy fiber data to qc")
