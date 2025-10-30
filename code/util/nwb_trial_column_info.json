@@ -1,0 +1,92 @@
+{
+    "trial_info": [{
+    "animal_response": "The response of the animal. 0, left choice; 1, right choice; 2, no response",
+    "rewarded_historyL": "The reward history of left lick port",
+    "rewarded_historyR": "The reward history of right lick port",
+    "delay_start_time": "The delay start time, this is the first delay of the trial",
+    "goCue_start_time": "The go cue start time",
+    "reward_outcome_time": "The reward outcome time (reward/no reward/no response), time of decision",
+    "side_bias":"The side bias of the animal",
+    "side_bias_confidence_interval":"The confidence interva of the side bias"
+    }],
+    
+    "behavior_structure": [{
+        "bait_left": "Whether the current left lickport has a bait or not",
+        "bait_right": "Whether the current right lickport has a bait or not",
+        "base_reward_probability_sum": "The summation of left and right reward probability",
+        "reward_probabilityL": "The reward probability of left lick port",
+        "reward_probabilityR": "The reward probability of right lick port",
+        "reward_random_number_left": "The random number used to determine the reward of left lick port",
+        "reward_random_number_right": "The random number used to determine the reward of right lick port",
+        "left_valve_open_time": "The left valve open time",
+        "right_valve_open_time": "The right valve open time"
+    }],
+
+    "block_information": [{
+        "block_beta": "The beta of exponential distribution to generate the block length",
+        "block_min": "The minimum length allowed for each block",
+        "block_max": "The maximum length allowed for each block",
+        "min_reward_each_block": "The minimum reward allowed for each block"
+    }],
+
+    "delay_duration": [{
+        "delay_beta": "The beta of exponential distribution to generate the delay duration(s)",
+        "delay_min": "The minimum duration(s) allowed for each delay",
+        "delay_max": "The maximum duration(s) allowed for each delay",
+        "delay_duration": "The duration between delay start and go cue start"
+    }],
+
+    "ITI_duration": [{
+        "ITI_beta": "The beta of exponential distribution to generate the ITI duration(s)",
+        "ITI_min": "The minimum duration(s) allowed for each ITI",
+        "ITI_max": "The maximum duration(s) allowed for each ITI",
+        "ITI_duration": "The expected time duration between trial start and ITI start"
+    }],
+
+    "response_and_reward_duration": [{
+        "response_duration": "The maximum time that the animal must make a choice in order to get a reward",
+        "reward_consumption_duration": "The duration for the animal to consume the reward"
+    }],
+
+    "optogenetics": [{
+        "laser_on_trial": "Trials with laser stimulation",
+        "laser_wavelength": "The wavelength of laser or LED",
+        "laser_location": "The target brain areas",
+        "laser_1_power": "The laser 1 power(mw)",
+        "laser_2_power": "The laser 2 power(mw)",
+        "laser_duration": "The laser duration",
+        "laser_condition": "The laser on is conditioned on LaserCondition",
+        "laser_condition_probability": "The laser on is conditioned on LaserCondition with a probability LaserConditionPro",
+        "laser_start": "Laser start is aligned to an event",
+        "laser_start_offset": "Laser start is aligned to an event with an offset",
+        "laser_end": "Laser end is aligned to an event",
+        "laser_end_offset": "Laser end is aligned to an event with an offset",
+        "laser_protocol": "The laser waveform",
+        "laser_frequency": "The laser waveform frequency",
+        "laser_rampingdown": "The ramping down time of the laser",
+        "laser_pulse_duration": "The pulse duration for Pulse protocol"
+    }],
+
+    "auto_train_parameters": [{
+        "auto_waterL": "Autowater given at Left",
+        "auto_waterR": "Autowater given at Right",
+        "auto_train_engaged": "Whether the auto training is engaged",
+        "auto_train_curriculum_name": "The name of the auto training curriculum",
+        "auto_train_curriculum_version": "The version of the auto training curriculum",
+        "auto_train_curriculum_schema_version": "The schema version of the auto training curriculum",
+        "auto_train_stage": "The current stage of auto training",
+        "auto_train_stage_overridden": "Whether the auto training stage is overridden"
+    }],
+
+    "lickspout_position": [{
+        "lickspout_position_x": "x position (um) of the lickspout position (left-right)",
+        "lickspout_position_y1": "y1 position (um) of the left lickspout position (forward-backward)",
+        "lickspout_position_y2": "y2 position (um) of the right lickspout position (forward-backward)",
+        "lickspout_position_z": "z position (um) of the lickspout position (up-down)"
+    }],
+
+    "reward_size": [{
+        "reward_size_left": "Left reward size (uL)",
+        "reward_size_right": "Right reward size (uL)"
+    }]
+}
