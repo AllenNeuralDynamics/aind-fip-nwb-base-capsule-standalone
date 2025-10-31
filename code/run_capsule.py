@@ -125,7 +125,7 @@ if __name__ == "__main__":
     if "drop_start" in locals():
         if behavior_system != "pavlovian":
             run_qc(drop_start, drop_end, kept_gaps)
-        elif:
+        elif behavior_system == "pavlovian":
             logging.info("No legacy fiber data to qc")
             os.mkdir(os.path.join("/results", "alignment-qc"))
             qc_file_path = Path("/results") / "alignment-qc" / "no_fip_to_qc.txt"
