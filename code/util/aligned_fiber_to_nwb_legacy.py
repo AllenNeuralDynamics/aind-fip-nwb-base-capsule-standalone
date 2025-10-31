@@ -523,7 +523,14 @@ def load_Homebrew_fip_data(filenames, fibers_per_file=2):
             continue
         try:
             if ".csv" in filename:
-                df_fip_file = pd.read_csv(filename, header=None)  # read the CSV file
+                df_fip_file = pd.read_csv(filename)  # read the CSV file
+                expected_header = ["SoftwareTS", "ROI0", "ROI1", "ROI2", "ROI3", "ROI4_sensorfloor", "HarpTS"]
+                if list(df_fip_file.columns) == expected_header:
+                    df_fip_file = df_fip_file.drop(columns="HarpTS")
+                    df_fip_file = pd.read_csv(filename, header=None, skiprows=1)  # read data ignoring original header
+                # We need to drop the header
+                else:
+                    df_fip_file = pd.read_csv(filename, header=None)
                 zero_columns = (df_fip_file == 0).all(axis=0)
                 if zero_columns.any():
                     logging.warning(
