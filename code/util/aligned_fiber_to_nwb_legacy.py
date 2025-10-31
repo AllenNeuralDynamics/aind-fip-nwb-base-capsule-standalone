@@ -516,26 +516,18 @@ def load_Homebrew_fip_data(filenames, fibers_per_file=2):
 
     df_fip = pd.DataFrame()
     save_fip_channels = np.arange(1, fibers_per_file + 1)
-    expected_header = ["SoftwareTS", "ROI0", "ROI1", "ROI2", "ROI3", "ROI4_sensorfloor", "HarpTS"]
-
     for filename in filenames:
         header = os.path.basename(filename).split("/")[-1]
         channel = ("_".join(header.split("_")[:2])).replace("FIP_Data", "")
         if "Raw" in channel:
             continue
-
         try:
             if ".csv" in filename:
-                df_fip_file = pd.read_csv(filename)
-
-                # Only drop headers if they match exactly the expected header
+                df_fip_file = pd.read_csv(filename, header=None)  # read the CSV file
+                expected_header = ["SoftwareTS", "ROI0", "ROI1", "ROI2", "ROI3", "ROI4_sensorfloor", "HarpTS"]
                 if list(df_fip_file.columns) == expected_header:
-                    if "HarpTS" in df_fip_file.columns:
-                        df_fip_file = df_fip_file.drop(columns="HarpTS")
-                    # Drop headers entirely (treat data as raw)
-                    df_fip_file = pd.DataFrame(df_fip_file.to_numpy())
-
-                # Remove all-zero columns (legacy bug)
+                    df_fip_file = df_fip_file.drop(columns="HarpTS")  # drop HarpTS
+                    df_fip_file = pd.read_csv(filename, header=None, skiprows=1)  # read data ignoring original header
                 zero_columns = (df_fip_file == 0).all(axis=0)
                 if zero_columns.any():
                     logging.warning(
@@ -544,12 +536,10 @@ def load_Homebrew_fip_data(filenames, fibers_per_file=2):
                     )
                     df_fip_file = df_fip_file.loc[:, ~zero_columns]
                     df_fip_file.columns = range(len(df_fip_file.columns))
-
         except pd.errors.EmptyDataError:
             continue
         except FileNotFoundError:
             continue
-
         df_file = pd.DataFrame()
         for col in df_fip_file.columns[save_fip_channels]:
             df_fip_file_renamed = df_fip_file[[0, col]].rename(
@@ -559,7 +549,6 @@ def load_Homebrew_fip_data(filenames, fibers_per_file=2):
             df_fip_file_renamed["fiber_number"] = channel_number - 1
             df_fip_file_renamed.loc[:, "frame_number"] = df_fip_file.index.values
             df_file = pd.concat([df_file, df_fip_file_renamed])
-
         df_file["channel"] = channel
         camera = {"Iso": "G", "G": "G", "R": "R"}[channel]
         excitation = {"Iso": 415, "G": 470, "R": 560}[channel]
@@ -586,8 +575,8 @@ def load_Homebrew_fip_data(filenames, fibers_per_file=2):
         ]
     else:
         df_fip_ses = df_fip
-
     return df_fip_ses
+
 
 def to_daytime(t="2024-09-13 09:47:02.548400"):
     if isinstance(t, str):
