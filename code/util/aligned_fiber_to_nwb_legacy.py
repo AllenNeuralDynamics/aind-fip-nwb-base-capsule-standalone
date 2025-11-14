@@ -592,7 +592,7 @@ def to_daytime(t="2024-09-13 09:47:02.548400"):
         return t
 
 
-def clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop):
+def clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop, align):
     """
     Cleans Harp timestamps from raw.harp/BehaviorEvents/Event_32.bin in the specified directory.
 
@@ -607,6 +607,7 @@ def clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop):
         max_drop (int): The maximum number of timestamps that can be dropped from the
                         start and end of the dataset during truncation.
 
+        align (str): How to align FIP and HARP timestamps. Options: 'auto', 'start', 'end'.
     Returns:
         np.ndarray: A NumPy array of cleaned and aligned Harp timestamps.
 
@@ -741,7 +742,17 @@ def clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop):
                 end = timestamps_fip[-1] / 1000 - to_daytime(
                     values.get("fiber_photometry_end_time", np.nan)
                 )
-            if (start < 0.9 or start > 1.2) and end >= 0 and end <= 1.2:
+            align_end = align.lower() == "end" or (
+                align.lower() == "auto"
+                and (start < 0.9 or start > 1.2)
+                and 0 <= end <= 1.2
+            )
+            if align.lower() == "end":
+                logging.info(
+                    "Argument 'align' set to 'end', "
+                    "thus aligning at the end rather than the start."
+                )
+            elif align_end:  # This means auto mode triggered end alignment
                 logging.warning(
                     f"Unusual time difference: first CSV timestamp vs. "
                     "JSON `fiber_photometry_start_time`, but\n"
@@ -863,7 +874,7 @@ def clean_timestamps(timestamps, pace=0.05, tolerance=0.2):
     return timestamps_final
 
 
-def append_aligned_fiber_to_nwb(AnalDir, max_drop, nwb_file):
+def append_aligned_fiber_to_nwb(AnalDir, max_drop, nwb_file, align):
     """Combine preprocessing steps and append to nwb"""
     drop_start, drop_end, kept_gaps = 0, 0, []
     # % Detect Fiber photometry and behavioral systems
@@ -939,7 +950,7 @@ def append_aligned_fiber_to_nwb(AnalDir, max_drop, nwb_file):
                     logging.info(df0[df0["channel"] == ch].iloc[[0, 1, 2, 3, -1]])
         timestamps_fip = df0["time_fip"][df0["channel"] == counts.idxmax()].values
         timestamps_Harp_cleaned, drop_start, drop_end, kept_gaps = (
-            clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop)
+            clean_timestamps_Harp(AnalDir, timestamps_fip, diff_counts, max_drop, align)
         )
         df_fip_ses_aligned = alignment_fip_time_to_harp(
             df_fip_ses_cleaned, timestamps_Harp_cleaned

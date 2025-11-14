@@ -47,8 +47,18 @@ class FiberSettings(BaseSettings, cli_parse_args=True):
         description="Minimum amount of FIP data required before FIP data is processed",
     )
     max_drop: int = Field(
-        default=3600,
+        default=12000,
         description="Maximum number of samples to drop from the end if NaNs or a large gap in the time stamps are found near the end.",
+    )
+    align: str = Field(
+        default="auto",
+        description=            
+            "How to align FIP and HARP timestamps. "
+            "Options: 'auto', 'start', 'end'. "
+            "'auto' (default) aligns at the start unless the time difference between "
+            "the FIP start time in the CSV and JSON is poor but the end time aligns well. "
+            "If matching gaps are found in the timestamps, those are used for alignment "
+            "and this argument has no effect."
     )
 if __name__ == "__main__":
     settings = FiberSettings()
@@ -105,7 +115,7 @@ if __name__ == "__main__":
         fip_duration = min([num_rows(f) for f in filenames])
         if fip_duration > settings.min_fip_duration:
             nwbfile, drop_start, drop_end, kept_gaps, behavior_system = append_aligned_fiber_to_nwb(
-                fiber_fp, settings.max_drop, base_nwb_file
+                fiber_fp, settings.max_drop, base_nwb_file, settings.align
             )
             logging.info("Successfully appended the aligned fiber photometry data.")
         else:
