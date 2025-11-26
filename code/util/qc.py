@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from aind_data_schema.core.quality_control import (
-    QCEvaluation,
     QCMetric,
     QCStatus,
     QualityControl,
@@ -261,6 +260,9 @@ def create_plot_metric(
     """
     return QCMetric(
         name=name,
+        modality=Modality.FIB,
+        stage=Stage.PROCESSING,
+        tags=["Alignment check"],
         reference=reference.replace("/results/", ""),
         description=description,
         status_history=[
@@ -297,6 +299,9 @@ def create_p_value_metric(p_values):
     significant = np.any(p_values < 0.05)
     return QCMetric(
         name="Significant response to Go Cue",
+        modality=Modality.FIB,
+        stage=Stage.PROCESSING,
+        tags=["Alignment check"],
         description=(
             "Check for a significant difference in mean activity "
             "between the 500 ms before and after the Go Cue."
@@ -330,6 +335,9 @@ def create_truncation_metric(drop_start, drop_end):
     return QCMetric(
         name="Truncated timestamps",
         description="Number of HARP timestamps truncated at start & end for alignment",
+        modality=Modality.FIB,
+        stage=Stage.PROCESSING,
+        tags=["Alignment check"],
         status_history=[
             QCStatus(
                 evaluator="Automatic",
@@ -357,6 +365,9 @@ def create_gap_metric(gaps):
     return QCMetric(
         name="Retained gaps in timestamps",
         description="Retained gaps in timestamps because they occurred mid-session",
+        modality=Modality.FIB,
+        stage=Stage.PROCESSING,
+        tags=["Alignment check"],
         status_history=[
             QCStatus(
                 evaluator="Automatic",
@@ -416,6 +427,9 @@ def create_time_metric(fiber_path, df_G):
         name="Time difference between FIP start & end times in CSV vs JSON",
         description="Typically (first CSV timestamp - JSON start_time) is in [0.9, 1.2] "
         "and (last CSV timestamp - JSON end_time) is in [0, 1.2]",
+        modality=Modality.FIB,
+        stage=Stage.PROCESSING,
+        tags=["Alignment check"],
         status_history=[
             QCStatus(
                 evaluator="Automatic",
@@ -497,21 +511,11 @@ def run_qc(drop_start=None, drop_end=None, gaps=None):
         create_time_metric(fiber_path, df_G),
     ]
 
-    # Create evaluation and save QC report
-    evaluation = QCEvaluation(
-        name="Alignment check",
-        modality=Modality.FIB,
-        stage=Stage.PROCESSING,
+    # Create and save QC report
+    qc = QualityControl(
         metrics=metrics,
-        description=(
-            "Quality control of fiber photometry data alignment. "
-            "Verifies proper alignment of timestamps and "
-            "presence of significant response to Go Cue."
-        ),
-        latest_status=Status.PASS if significant else Status.FAIL,
+        default_grouping=["Alignment check"]
     )
-
-    qc = QualityControl(evaluations=[evaluation])
     qc.write_standard_file(output_directory=output_dir)
 
 
