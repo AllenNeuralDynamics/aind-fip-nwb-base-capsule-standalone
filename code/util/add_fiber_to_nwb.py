@@ -128,16 +128,14 @@ def get_fiber_data_by_channel(session_fiber_directory: Path) -> dict[str, np.nda
 
         df_channel = pd.read_csv(session_fiber_directory / f"{channel}.csv")
         fiber_columns = df_channel.filter(like="Fiber").columns
+        timestamps = df_channel["ReferenceTime"].to_numpy()
+
         for column in fiber_columns:
             index = column[-1]
-            timestamps = df_channel["ReferenceTime"].to_numpy()
-            background_signal = df_channel["Background"].to_numpy()
+            
             data = df_channel[column].to_numpy()
             fiber_timeseries[f"{CHANNEL_MAPPING[channel]}_{index}"] = np.array(
                 [timestamps, data]
-            )
-            fiber_timeseries[f"{CHANNEL_MAPPING[channel]}_CMOS_FLOOR"] = np.array(
-                [timestamps, background_signal]
             )
 
     return fiber_timeseries
