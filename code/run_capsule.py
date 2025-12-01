@@ -77,10 +77,10 @@ if __name__ == "__main__":
     with data_description_path.open("r") as f:
         date_data = json.load(f)
 
-    session_path = fiber_fp / "session.json"
+    session_path = fiber_fp / "acquisition.json"
     with session_path.open("r") as f:
         session_data = json.load(f)
-    date = session_data["session_start_time"]
+    date = session_data["acquisition_start_time"]
 
     asset_name = date_data["name"]
 
