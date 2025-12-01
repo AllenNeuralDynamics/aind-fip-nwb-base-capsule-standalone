@@ -105,7 +105,7 @@ if __name__ == "__main__":
         logging.info("Standard file format detected")
         fiber_channel_data = get_fiber_data_by_channel(fiber_directories[0])
         fiber_channel_data_cleaned_for_nans = deal_with_nans(fiber_channel_data)
-        nwbfile, src_io = add_fiber_data_to_nwb(
+        nwbfile = add_fiber_data_to_nwb(
             base_nwb_file, fiber_channel_data_cleaned_for_nans
         )
     # Append FIP to behavior NWB if FIP or fib exists
