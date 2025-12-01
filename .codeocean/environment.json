@@ -23,7 +23,8 @@
 					"version": "0.2.4"
 				},
 				{
-					"name": "aind-nwb-utils"
+					"name": "aind-nwb-utils",
+					"version": "0.1.4"
 				},
 				{
 					"name": "aind-qcportal-schema",
