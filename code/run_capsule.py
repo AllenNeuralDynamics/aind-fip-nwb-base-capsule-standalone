@@ -77,10 +77,10 @@ if __name__ == "__main__":
     with data_description_path.open("r") as f:
         date_data = json.load(f)
 
-    session_path = fiber_fp / "session.json"
+    session_path = fiber_fp / "acquisition.json"
     with session_path.open("r") as f:
         session_data = json.load(f)
-    date = session_data["session_start_time"]
+    date = session_data["acquisition_start_time"]
 
     asset_name = date_data["name"]
 
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         logging.info("Standard file format detected")
         fiber_channel_data = get_fiber_data_by_channel(fiber_directories[0])
         fiber_channel_data_cleaned_for_nans = deal_with_nans(fiber_channel_data)
-        nwbfile, src_io = add_fiber_data_to_nwb(
+        nwbfile = add_fiber_data_to_nwb(
             base_nwb_file, fiber_channel_data_cleaned_for_nans
         )
     # Append FIP to behavior NWB if FIP or fib exists

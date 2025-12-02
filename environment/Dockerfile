@@ -1,6 +1,6 @@
-# hash:sha256:cf038e91a654b9de2099fceaef999f1d23367027735dc77ffa7426e8ebdf14a6
+# hash:sha256:d633c30f9511c2d133843680f5614ba469cdd4c50f70a2537a5438c924b07cc6
 ARG REGISTRY_HOST
-FROM $REGISTRY_HOST/codeocean/mambaforge3:23.1.0-4-python3.10.12-ubuntu22.04
+FROM $REGISTRY_HOST/codeocean/mambaforge3:24.5.0-0-python3.12.4-ubuntu22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG GIT_ASKPASS
@@ -8,9 +8,9 @@ COPY git-askpass /
 
 RUN pip install -U --no-cache-dir \
     aind-data-access-api==1.2.2 \
-    aind-data-schema==1.2.0 \
+    aind-data-schema==2.0.1 \
     aind-log-utils==0.2.4 \
-    aind-nwb-utils==0.1.2 \
+    aind-nwb-utils==0.1.4 \
     aind-qcportal-schema==0.4.0 \
     harp-python==0.4.1 \
     hdmf-zarr==0.11.1 \

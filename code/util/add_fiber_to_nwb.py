@@ -5,6 +5,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 import pynwb
+from aind_nwb_utils.utils import add_data
 from hdmf_zarr import NWBZarrIO
 import logging
 
@@ -127,33 +128,32 @@ def get_fiber_data_by_channel(session_fiber_directory: Path) -> dict[str, np.nda
 
         df_channel = pd.read_csv(session_fiber_directory / f"{channel}.csv")
         fiber_columns = df_channel.filter(like="Fiber").columns
+        timestamps = df_channel["ReferenceTime"].to_numpy()
+
         for column in fiber_columns:
             index = column[-1]
-            timestamps = df_channel["ReferenceTime"].to_numpy()
-            background_signal = df_channel["Background"].to_numpy()
+            
             data = df_channel[column].to_numpy()
             fiber_timeseries[f"{CHANNEL_MAPPING[channel]}_{index}"] = np.array(
                 [timestamps, data]
-            )
-            fiber_timeseries[f"{CHANNEL_MAPPING[channel]}_CMOS_FLOOR"] = np.array(
-                [timestamps, background_signal]
             )
 
     return fiber_timeseries
 
 
-def add_fiber_data_to_nwb(subject_nwb: str, dict_fip: dict) -> pynwb.NWBFile:
+def add_fiber_data_to_nwb(nwb: pynwb.NWBFile, dict_fip: dict) -> pynwb.NWBFile:
     """
     Attach FIP data to an existing NWB file.
 
     Parameters:
-    subject_nwb (str): NWB file
-    dict_fip (dict): A dictionary containing the FIP data.
+    nwb: pynwb.NWBFile 
+        The NWB file to add
+    dict_fip: dict
+         A dictionary containing the FIP data.
 
     Returns:
     pynwb.NWBFile: The updated NWB file with the attached FIP data.
     """
-    nwb = subject_nwb
     logging.info(f"dict_fip {dict_fip}")
 
     for neural_stream in dict_fip:
@@ -174,6 +174,6 @@ def add_fiber_data_to_nwb(subject_nwb: str, dict_fip: dict) -> pynwb.NWBFile:
             description=description
         )
         logging.info(f"Shape of timeseries data in nwb {ts.data.shape}")
-        nwb.add_acquisition(ts)
-
+        add_data(nwb, "acquisition", neural_stream, ts)
+    print(nwb.acquisition)
     return nwb
