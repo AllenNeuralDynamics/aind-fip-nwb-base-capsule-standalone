@@ -97,33 +97,20 @@ if __name__ == "__main__":
 
     base_nwb_file = create_base_nwb_file(fiber_fp)
 
-    if not [i for i in fiber_fp.glob("fib/")]:
-        raise ValueError("No fiber data detected")
-
-    fiber_directories = [i for i in fiber_fp.glob("fib/*") if i.is_dir()]
-    if fiber_directories:
-        logging.info("Standard file format detected")
-        fiber_channel_data = get_fiber_data_by_channel(fiber_directories[0])
-        fiber_channel_data_cleaned_for_nans = deal_with_nans(fiber_channel_data)
-        nwbfile, src_io = add_fiber_data_to_nwb(
-            base_nwb_file, fiber_channel_data_cleaned_for_nans
+    logging.info("Legacy file format detected")
+    fiber_photometry_system, filenames = detect_fiber_photometry_system(fiber_fp)
+    fip_duration = min([num_rows(f) for f in filenames])
+    if fip_duration > settings.min_fip_duration:
+        nwbfile, drop_start, drop_end, kept_gaps, behavior_system = append_aligned_fiber_to_nwb(
+            fiber_fp, settings.max_drop, base_nwb_file, settings.align
         )
-    # Append FIP to behavior NWB if FIP or fib exists
-    else:  # legacy acquisition
-        logging.info("Legacy file format detected")
-        fiber_photometry_system, filenames = detect_fiber_photometry_system(fiber_fp)
-        fip_duration = min([num_rows(f) for f in filenames])
-        if fip_duration > settings.min_fip_duration:
-            nwbfile, drop_start, drop_end, kept_gaps, behavior_system = append_aligned_fiber_to_nwb(
-                fiber_fp, settings.max_drop, base_nwb_file, settings.align
-            )
-            logging.info("Successfully appended the aligned fiber photometry data.")
-        else:
-            raise ValueError(
-                f"FIP data is present, but only {fip_duration / 20}s long. "
-                f"This is shorter than the required {settings.min_fip_duration / 20}s, "
-                "thus treating dataset as behavior-only instead of appending FIP data."
-            )
+        logging.info("Successfully appended the aligned fiber photometry data.")
+    else:
+        raise ValueError(
+            f"FIP data is present, but only {fip_duration / 20}s long. "
+            f"This is shorter than the required {settings.min_fip_duration / 20}s, "
+            "thus treating dataset as behavior-only instead of appending FIP data."
+        )
 
     nwbfile = add_info_to_nwb(nwbfile, fiber_fp)
     nwb_output_fn = nwb_output_path / nwb_filename
