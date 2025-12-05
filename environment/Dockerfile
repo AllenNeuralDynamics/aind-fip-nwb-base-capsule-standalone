@@ -1,4 +1,4 @@
-# hash:sha256:cf038e91a654b9de2099fceaef999f1d23367027735dc77ffa7426e8ebdf14a6
+# hash:sha256:6af8f010263caecab5c003f0b26ed33f50b96e52df7a833dcaac0852fddbceee
 ARG REGISTRY_HOST
 FROM $REGISTRY_HOST/codeocean/mambaforge3:23.1.0-4-python3.10.12-ubuntu22.04
 
@@ -8,7 +8,7 @@ COPY git-askpass /
 
 RUN pip install -U --no-cache-dir \
     aind-data-access-api==1.2.2 \
-    aind-data-schema==1.2.0 \
+    aind-data-schema==1.4.0 \
     aind-log-utils==0.2.4 \
     aind-nwb-utils==0.1.2 \
     aind-qcportal-schema==0.4.0 \
